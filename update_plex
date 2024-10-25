@@ -1,10 +1,6 @@
 #!/bin/bash
 
-redirect_url=$(curl -s "https://plex.tv/downloads/latest/5?channel=16&build=linux-x86_64&distro=debian" | grep -oE '<a href="([^"#]+)"' | cut -d'"' -f2)
-
-filename=$(basename "$redirect_url")
-
-new_version=$(echo "$filename" | sed -E 's/plexmediaserver_([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-[0-9a-f]+)_.*$/\1/')
+new_version=$(curl -sL "https://plex.tv/api/downloads/5.json" | grep -oP '"version":"\K[^"]+' | head -n 1)
 
 installed_version=$(/usr/lib/plexmediaserver/'Plex Media Server' --version | sed 's/^v//')
 
